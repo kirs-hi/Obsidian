@@ -1,5 +1,5 @@
 {
-  "feishu_webhook": "YOUR_WEBHOOK_URL_HERE",
+  "feishu_webhook": "https://open.feishu.cn/open-apis/bot/v2/hook/10d13f3a-df01-41d1-970b-32976491d590",
   "feishu_secret": "",
   "xhs_account": "风继续吹",
   "notes": [
