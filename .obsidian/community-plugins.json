@@ -1,5 +1,8 @@
 [
   "obsidian-git",
   "share-note",
-  "pdf-plus"
+  "pdf-plus",
+  "dataview",
+  "templater-obsidian",
+  "calendar"
 ]
