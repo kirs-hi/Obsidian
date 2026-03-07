@@ -1,6 +1,6 @@
 {
   "command_timeout": 5,
-  "templates_folder": "Templates",
+  "templates_folder": "50_资源库/模板",
   "templates_pairs": [
     ["", ""]
   ],

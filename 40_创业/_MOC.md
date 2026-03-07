@@ -6,8 +6,8 @@
 
 ### 小红书
 - [[账号策划-风继续吹]]
-- 已发布：`40_Business/Xiaohongshu/Published/`
-- 草稿箱：`40_Business/Xiaohongshu/Drafts/`
+- 已发布：`40_创业/小红书/已发布/`
+- 草稿箱：`40_创业/小红书/草稿箱/`
 
 ### 微信公众号
 - 
