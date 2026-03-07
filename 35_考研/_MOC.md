@@ -30,12 +30,59 @@
 - [ ] 重点整理
 - [ ] 真题练习
 
-## 阶段复盘
-
-| 月份 | 复盘链接 | 关键总结 |
-|------|---------|---------|
-| 3月 | | |
-
 ---
 
-*每月更新进度，让 AI 帮你分析薄弱环节和调整计划。*
+## 政治笔记
+
+```dataviewjs
+const pages = dv.pages('"35_考研/政治"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
+
+## 英语笔记
+
+```dataviewjs
+const pages = dv.pages('"35_考研/英语"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
+
+## 数学笔记
+
+```dataviewjs
+const pages = dv.pages('"35_考研/数学"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
+
+## 专业课笔记
+
+```dataviewjs
+const pages = dv.pages('"35_考研/专业课"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
+
+## 复习计划 & 阶段复盘
+
+```dataviewjs
+const pages = dv.pages('"35_考研/复习计划"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```

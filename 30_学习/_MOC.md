@@ -2,23 +2,35 @@
 
 > 技术成长 · 读书积累 · 课程学习
 
-## 技术体系
+## 技术笔记
 
-### 大数据 & 实时计算
-- [[【多易教育】Flink教程-v4.1_unlocked (1)]]
-- [[实时数仓]]
-
-### 数仓建模
-- 
+```dataviewjs
+const pages = dv.pages('"30_学习/技术"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
 
 ## 读书笔记
 
-- 
+```dataviewjs
+const pages = dv.pages('"30_学习/读书笔记"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
 
 ## 课程笔记
 
-- 
-
----
-
-*每学完一个主题，在这里补充链接，逐步构建知识网络。*
+```dataviewjs
+const pages = dv.pages('"30_学习/课程笔记"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```

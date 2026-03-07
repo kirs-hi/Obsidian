@@ -2,24 +2,57 @@
 
 > 小红书 · 微信公众号 · 商业思考
 
-## 账号矩阵
+## 商业策略
 
-### 小红书
-- [[账号策划-风继续吹]]
-- 已发布：`40_创业/小红书/已发布/`
-- 草稿箱：`40_创业/小红书/草稿箱/`
+```dataviewjs
+const pages = dv.pages('"40_创业/商业策略"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
 
-### 微信公众号
-- 
+## 数据复盘
 
-## 策略 & 商业思考
+```dataviewjs
+const pages = dv.pages('"40_创业/数据复盘"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
 
-- 
+## 小红书 · 已发布
 
-## 运营数据 & 复盘
+```dataviewjs
+const pages = dv.pages('"40_创业/小红书/已发布"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
 
-- 
+## 小红书 · 草稿箱
 
----
+```dataviewjs
+const pages = dv.pages('"40_创业/小红书/草稿箱"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
 
-*内容创业的核心是持续输出 + 数据驱动迭代。*
+## 微信公众号
+
+```dataviewjs
+const pages = dv.pages('"40_创业/微信公众号"').sort(p => p.file.mtime, 'desc')
+if (pages.length === 0) {
+  dv.paragraph("*暂无笔记，新建笔记后自动出现*")
+} else {
+  dv.list(pages.map(p => `[[${p.file.name}]] · ${dv.date(p.file.mtime).toFormat("yyyy-MM-dd")}`))
+}
+```
