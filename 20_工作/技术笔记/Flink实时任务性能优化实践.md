@@ -62,6 +62,7 @@ Regular Join使用不当导致任务state膨胀，输出数据膨胀，影响任
 
 ![[90_管理/附件/flink_opt_fig_1.png]]
 
+
 流程图中将数据倾斜的场景归纳为三类：
 
     * 数据倾斜算子不涉及分组操作：这种场景下表示数据倾斜算子发生在分组操作（keyby/group by、partition by等）之前或者是该任务中没有分组操作，产生数据倾斜的原因是算子并行度设置不合理，对应解决方案是合理调整算子并行度。
@@ -497,8 +498,8 @@ ttl 降低内存使用量，性能优化的时候要综合考虑投入产出比�
 
 通过在测试链路回溯两小时数据验证比较发现，优化后Savepoint时的状态大小减少到优化前的五分之一左右，这样基于原来的作业参数就可以保证作业正常运行，减少了计算资源的浪费
 
-![[90_管理/附件/flink_opt_fig_25.png]]
 ![[90_管理/附件/flink_opt_fig_26.png]]
+![[90_管理/附件/flink_opt_fig_27.png]]
 图26 优化前Savepoint大小 图27 优化后Savepoint大小
 
 结论：对于Flink的中的多流join场景，我们建议优先对小表进行关联，然后再按照业务逻辑依次与大表进行关联，尽可能将大表放到最后关联，降低state大小，提高任务性能。
@@ -591,7 +592,7 @@ size of MapState
   
 性能：JoinkKeyContainsUniqueKey > InputSideHasUniqueKey > InputSideHasNoUniqueKey
 
-![[90_管理/附件/flink_opt_fig_27.png]]
+![[90_管理/附件/flink_opt_fig_28.png]]
 图28 数据下发示意图
 
 按照这个原理我们来进行如下分析：
@@ -676,7 +677,7 @@ row_number() over 和 group by + lastval 的区别:
 
 4：row_number() over 不支持mini-batch, lastval 由于是 group by 聚合，可以使用mini-batch
 
-![[90_管理/附件/flink_opt_fig_28.png]]
+![[90_管理/附件/flink_opt_fig_29.png]]
 图29 优化后Join逻辑
 
 我们还是从一条包裹数据变更 （I, id= 2, ext='x'） -> （I, id= 2, ext='y'），来说明**SQL10** 的执行流程：
@@ -694,7 +695,7 @@ join包裹，那么还需要下发一条 （U+ waybill_status=50, package_ext= N
 3、**Regular JOIN算子** 收到 （U+ id=2,ext = 'y'），查询出关联的数据 运单 satus = 50
 ，对于U+数据，保存到状态，并下发结果 （U+ waybill_status=50, package_ext= 'y'）
 
-![[90_管理/附件/flink_opt_fig_29.png]]
+![[90_管理/附件/flink_opt_fig_30.png]]
 图30 优化后数据下发示意图
 
 **效果分析：**
@@ -758,12 +759,12 @@ NULL) 问题。保序的解决方案是 connector
 
 2、下发数据量午高峰峰值由659w/m降低至129w/m，大幅减少了下游的计算量，合流下游相关作业资源由533CU 降低至 92CU。
 
-![[90_管理/附件/flink_opt_fig_30.png]]
 ![[90_管理/附件/flink_opt_fig_31.png]]
+![[90_管理/附件/flink_opt_fig_32.png]]
 图31 原合流作业下发数据量 图32 新合流作业下发数据量
 
-![[90_管理/附件/flink_opt_fig_32.png]]
 ![[90_管理/附件/flink_opt_fig_33.png]]
+![[90_管理/附件/flink_opt_fig_34.png]]
 图33 原合流作业3分钟一次的Checkpoint大小 图34 新合流作业5分钟一次的Checkpoint大小
 
 **总结** ：
@@ -799,26 +800,26 @@ Join）在不同资源配置下任务性能以及各项监控指标是否正常�
 
 任务优化前后资源配置如下：
 
-![[90_管理/附件/flink_opt_fig_34.png]]
 ![[90_管理/附件/flink_opt_fig_35.png]]
+![[90_管理/附件/flink_opt_fig_36.png]]
 图35 优化前资源配置信息 图36 优化后资源配置信息
 
 任务优化前后内存使用率从75%降为69%，午高峰期间CPU平均使用率从100%飙升到了200%：分配总内存数从2T缩减为1472G，内存缩减了576G约28%
 
-![[90_管理/附件/flink_opt_fig_36.png]]
 ![[90_管理/附件/flink_opt_fig_37.png]]
+![[90_管理/附件/flink_opt_fig_38.png]]
 图37 优化前内存、CPU使用情况 图38 优化后内存、CPU使用情况
 
 优化前后对比发现优化后每秒TM YoungGC次数是优化前的2倍，每秒TM FullGC次数也有一定的上升：
 
-![[90_管理/附件/flink_opt_fig_38.png]]
 ![[90_管理/附件/flink_opt_fig_39.png]]
+![[90_管理/附件/flink_opt_fig_40.png]]
 图39 优化前每秒YoungGC，FUllGC次数 图40 优化后每秒YoungGC，FUllGC次数
 
 对比优化前后任务午高峰期间消费速度基本一致
 
-![[90_管理/附件/flink_opt_fig_40.png]]
 ![[90_管理/附件/flink_opt_fig_41.png]]
+![[90_管理/附件/flink_opt_fig_42.png]]
 图41 优化前任务消费速度 图42 优化后任务消费速度
 
 结论：
@@ -831,7 +832,7 @@ Join）在不同资源配置下任务性能以及各项监控指标是否正常�
 
 介绍内存参数优化之前首先看一个内存模型图
 
-![[90_管理/附件/flink_opt_fig_42.png]]
+![[90_管理/附件/flink_opt_fig_43.png]]
 图43 Flink内存模型图
 
 见过模型图之后我们了解一下Flink内存模型的各个组成部分以及参数配置：
@@ -944,7 +945,7 @@ components)，让Flink预留更多内存即可。另一方面根据情况，可�
 Dump日志，在(https://fastthread.io/)上进行dump日志分析，发现任务卡在RocksDB.get()方法上，在平台同学的协助下抓取了CPU火焰图
 见下图：
 
-![[90_管理/附件/flink_opt_fig_43.png]]
+![[90_管理/附件/flink_opt_fig_44.png]]
 图44 故障任务CPU火焰图
 
   * **优化过程**
@@ -956,8 +957,8 @@ Dump日志，在(https://fastthread.io/)上进行dump日志分析，发现任务
 事后对比主备链路相关监控发现主链路存在大量的读磁盘操作，而备用链路则没有，原因在于我们的优化参数调大了RocksDB内存分配比例、blocksize、
 block cache等相关参数，提升了RocksDB读的性能。监控信息如下图：
 
-![[90_管理/附件/flink_opt_fig_44.png]]
 ![[90_管理/附件/flink_opt_fig_45.png]]
+![[90_管理/附件/flink_opt_fig_46.png]]
 图45 备用链路监控 图46 主链路监控
 
 虽然添加RocksDB相关参数可以解决这个问题，但是问题的根因依旧没有定位到，在咨询了社区相关专业同学之后得知原因如下：
