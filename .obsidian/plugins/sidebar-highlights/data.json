@@ -26,8 +26,10 @@
         "startOffset": 13888,
         "endOffset": 13902,
         "filePath": "20_工作/技术笔记/社区电商实时数仓建设实践（完整版）.md",
-        "footnoteCount": 0,
-        "footnoteContents": [],
+        "footnoteCount": 1,
+        "footnoteContents": [
+          "这段话主要解释了在处理数据倾斜问题时，针对不同场景可以采取的三种具体技术手段："
+        ],
         "createdAt": 1772981358504,
         "isNativeComment": false,
         "type": "highlight"
