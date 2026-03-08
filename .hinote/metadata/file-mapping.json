@@ -2,7 +2,15 @@
   "version": "2.0",
   "mapping": {
     "20_工作/项目文档/供应链全链路实时数仓建设.md": "20_工作_项目文档_供应链全链路实时数仓建设.md.json",
-    "30_学习/技术/社区电商物流实时数仓稳定性建设.md": "30_学习_技术_社区电商物流实时数仓稳定性建设.md.json"
+    "30_学习/技术/社区电商物流实时数仓稳定性建设.md": "30_学习_技术_社区电商物流实时数仓稳定性建设.md.json",
+    "20_工作/技术笔记/attachments/fig_3_1_1_业务特点.png": "20_工作_技术笔记_attachments_fig_3_1_1_业务特点.png.json",
+    "20_工作/技术笔记/attachments/fig_3_1_3_引擎选型过程.png": "20_工作_技术笔记_attachments_fig_3_1_3_引擎选型过程.png.json",
+    "20_工作/技术笔记/attachments/fig_3_1_5_模型层次.png": "20_工作_技术笔记_attachments_fig_3_1_5_模型层次.png.json",
+    "20_工作/技术笔记/attachments/fig_3_1_6_离线实时统一建设规范.png": "20_工作_技术笔记_attachments_fig_3_1_6_离线实时统一建设规范.png.json",
+    "20_工作/技术笔记/attachments/fig_3_2_4_实时维度表生产.png": "20_工作_技术笔记_attachments_fig_3_2_4_实时维度表生产.png.json",
+    "20_工作/技术笔记/attachments/fig_3_2_6_数据一致性建设.png": "20_工作_技术笔记_attachments_fig_3_2_6_数据一致性建设.png.json",
+    "20_工作/技术笔记/attachments/fig_3_3_2_开发SOP.png": "20_工作_技术笔记_attachments_fig_3_3_2_开发sop.png.json",
+    "20_工作/技术笔记/attachments/fig_3_3_4_DQC系统架构.png": "20_工作_技术笔记_attachments_fig_3_3_4_dqc系统架构.png.json"
   },
-  "lastUpdated": 1772975727474
+  "lastUpdated": 1772976715544
 }
