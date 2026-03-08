@@ -1,0 +1,21 @@
+{
+  "version": "2.0",
+  "lastModified": 1772981159424,
+  "highlights": {
+    "highlight-1572402744-13783": {
+      "text": "优化手段",
+      "position": 13783,
+      "created": 1772981145444,
+      "updated": 1772981159424,
+      "backgroundColor": "#ffeb3b",
+      "comments": [
+        {
+          "id": "comment-1772981145444-mhomdzthj",
+          "content": "启用增量 Checkpoint：如果你使用的是 RocksDB 状态后端，可以在配置文件中设置 state.backend.incremental: true，或者在代码中通过 RocksDBStateBackend 开启增量模式。这样每次 Checkpoint 只会上传自上次快照以来发生变化的数据，能极大减少数据传输量。\n调整 Checkpoint 间隔：在 Flink 程序中使用 env.enableCheckpointing(n) 来设置触发频率（n 为毫秒）。缩短间隔可以使每次 Checkpoint 需要持久化的增量数据变少，但需注意不要设置得过短以免系统一直处于快照状态。\n增加 Checkpoint 超时时间：如果由于网络波动或磁盘 I/O 压力导致超时，可以通过配置 execution.checkpointing.timeout 来延长等待时间。例如将其设置为 10 分钟或更久，给大数据量的同步留出足够空间。\n增加任务并行度：通过 env.setParallelism(n) 或在提交任务时指定更高的并行度。这会将总的状态数据分散到更多的算子实例上，减轻单个实例处理状态快照的压力，从而提升整体速度。\n设置合理的 State 保存时间 (TTL)：在定义状态（如 ValueStateDescriptor）时，通过 StateTtlConfig 配置状态的过期时间。这样系统会自动清理掉那些不再需要的陈旧状态，从根源上控制状态的大小，防止 Checkpoint 数据量因状态堆积而无限膨胀。",
+          "created": 1772981145444,
+          "updated": 1772981159424
+        }
+      ]
+    }
+  }
+}
