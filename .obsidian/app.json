@@ -1,6 +1,11 @@
 {
   "useMarkdownLinks": false,
-  "newLinkFormat": "absolute",
+  "newLinkFormat": "shortest",
+  "attachmentFolderPath": "50_资源库/附件",
+  "strictLineBreaks": true,
+  "showLineNumber": true,
+  "readableLineLength": true,
+  "alwaysUpdateLinks": true,
   "pdfExportSettings": {
     "includeName": true,
     "pageSize": "Letter",
