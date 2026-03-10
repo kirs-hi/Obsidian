@@ -15,10 +15,11 @@ tags:
 
 ## 最佳推荐
 
-| 目标 | 推荐 | 理由 |
-|------|------|------|
-| 快速构建 AI 产品 | [Dify](https://github.com/langgenius/dify) | 50k+ Stars，RAG + Agent + 工作流可视化编排，开箱即用 |
-| 系统学习 AI 编程 | [easy-vibe](https://github.com/datawhalechina/easy-vibe) | 分初/中/高三级，高级覆盖全栈+Agent+跨端，适合有编程基础的人 |
+| 目标         | 推荐                                                       | 理由                                     |
+| ---------- | -------------------------------------------------------- | -------------------------------------- |
+| 快速构建 AI 产品 | [Dify](https://github.com/langgenius/dify)               | 50k+ Stars，RAG + Agent + 工作流可视化编排，开箱即用 |
+| 系统学习 AI 编程 | [easy-vibe](https://github.com/datawhalechina/easy-vibe) | 分初/中/高三级，高级覆盖全栈+Agent+跨端，适合有编程基础的人     |
+|            | https://www.vibevibe.cn/zh/                              |                                        |
 
 ---
 
