@@ -1,10 +1,11 @@
 # Long-term Memory
 
+
 ### User Info
 User is a data warehouse development engineer (数仓开发工程师).
 
 ### Obsidian Git 配置
-- Obsidian vault: /Users/szx/Documents/red
+- Obsidian vault: /Users/szx/Documents/20_Learn/笔记
 - GitHub 仓库: kirs-hi/Obsidian (公开)
 - GitHub 用户名: kirs-hi
 - 连接方式: HTTPS + PAT
@@ -61,6 +62,3 @@ User is a data warehouse development engineer (数仓开发工程师).
 
 核心板块有 _MOC.md 知识地图：20_工作、30_学习、35_考研、40_创业
 写笔记时根据内容类型放入对应目录，不确定的先放 00_收件箱。
-
-### Drawio Rules
-学城 Draw.io 格式要求：1) XML 根元素必须是 <mxGraphModel>，严禁 <mxfile>/<diagram> 包装，否则粘贴后空白；2) mxCell id 用语义化命名（如 dw_n8），禁止纯数字 ID 避免重复；3) URL 编码用 python3 urllib.parse.quote，不用 shell 脚本；4) <mxCell /> 和 <mxGeometry /> 用自闭合标签（注意空格）
