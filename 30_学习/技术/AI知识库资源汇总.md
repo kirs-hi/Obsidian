@@ -76,3 +76,10 @@ tags:
 - **[Datawhale](https://www.datawhale.cn/)** — 国内最活跃的 AI 开源学习社区，免费课程+社区共学
 - **[HelloGitHub](https://hellogithub.com/)** — GitHub 开源项目中文推荐，设有大模型排名专区
 - **[ShowMeAI](https://www.showmeai.tech/)** — 数据科学与 AI 主题 Awesome 资源大全
+new_category_name	新品类名称
+new_first_category_code	新一级品类编码
+new_first_category_name	新一级品类名称
+new_second_category_code	新二级品类编码
+new_second_category_name	新二级品类名称
+new_third_category_code	新三级品类编码
+new_third_category_name	新三级品类名称
