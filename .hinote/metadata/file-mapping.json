@@ -2,7 +2,10 @@
   "version": "2.0",
   "mapping": {
     "30_学习/技术/AI知识库资源汇总.md": "30_学习_技术_ai知识库资源汇总.md.json",
-    "20_工作/技术笔记/数仓建模规范.md": "20_工作_技术笔记_数仓建模规范.md.json"
+    "20_工作/技术笔记/数仓建模规范.md": "20_工作_技术笔记_数仓建模规范.md.json",
+    "30_学习/技术/OpenClaw/01_OpenClaw概览与历史.md": "30_学习_技术_openclaw_01_openclaw概览与历史.md.json",
+    "30_学习/技术/OpenClaw/03_OpenClaw部署指南.md": "30_学习_技术_openclaw_03_openclaw部署指南.md.json",
+    "30_学习/技术/OpenClaw/02_OpenClaw功能详解.md": "30_学习_技术_openclaw_02_openclaw功能详解.md.json"
   },
-  "lastUpdated": 1773328412879
+  "lastUpdated": 1773432764173
 }
