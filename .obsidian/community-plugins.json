@@ -8,6 +8,7 @@
   "heatmap-calendar",
   "full-calendar-remastered",
   "pretty-properties",
-  "obsidian-icon-folder",
-  "obsidian-excalidraw-plugin"
+  "obsidian-excalidraw-plugin",
+  "drawio-obsidian",
+  "hot-reload"
 ]

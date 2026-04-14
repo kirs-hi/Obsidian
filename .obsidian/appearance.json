@@ -1,5 +1,8 @@
 {
   "accentColor": "",
   "theme": "moonstone",
-  "cssTheme": "Border"
+  "cssTheme": "Border",
+  "enabledCssSnippets": [
+    "iconize-hide-default"
+  ]
 }
