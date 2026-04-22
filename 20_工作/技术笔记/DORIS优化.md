@@ -1,5 +1,5 @@
-
-
+官方文档
+https://doris.apache.org/zh-CN/docs/dev/gettingStarted/what-is-apache-doris
 ## Doris 的核心架构包括哪些组件？各自的作用是什么？
 **一句话记住：FE 管调度，BE 管存算，Meta 管元数据，Broker 管导入导出。**
 ## 回答重点
