@@ -1,8 +1,3 @@
-```text
-mindmap-plugin: basic
-```
-
-
 ### 
 优选-买菜 SLA 治理 调研
 https://km.sankuai.com/collabpage/1551258149
@@ -14,6 +9,7 @@ https://km.sankuai.com/collabpage/2120373159
 
 
 **现状（有多差）→ 目标（要多好）→ 分析（为什么差）→ 措施（怎么治）→ 运营（怎么保持）→ 度量（治得怎样）**
+
 
 
 
