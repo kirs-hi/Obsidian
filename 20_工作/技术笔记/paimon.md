@@ -10,3 +10,11 @@ Apache Paimon 是一个高吞吐、低延迟的流式数据湖，专注于实时
 | 分区（Partition）  | Paimon采用与Apache Hive相同的分区概念来分割数据。<br><br>分区是一种基于特定列（如日期、城市、部门）的值将表划分为关联部分的可选方法。每张表可以有一个或多个分区键，用于标识特定分区。<br><br>通过分区，用户可以高效地操作表中的部分数据。                                                                                                                                                             |
 | 表结构（Schema）    | 记录了字段，主键、分区、分桶，版本号等信息，是所有数据与元数据关联的基础，每次更新调整Schema，都会生产一个新版本的Schema文件，借助此项能力来实现SchemaEvolution。                                                                                                                                                                                                    |
 | 合并（Compaciton） | Paimon使用类似RocksDB的Universal Compaction策略，好处是Compaction更轻量，每轮Compaction不需要将同层数据全部参与Compaction，写放大控制的较好，但是问题是因为每轮Compaciton都不会合并全部数据，所以读放大会相对增加，所以相当于在写放大和读放大之间做了动态权衡，如果写多读少，比如没有cdc的需求，可以适当的增加一次参与compaciton的文件数。当Paimon将记录追加到LSM树时，它也会根据需要执行Compaction。用户还可以选择在“专用Compaction作业”中独立执行所有Compaction。 |
+doris对比paimon
+
+|对比项|Paimon|Doris|
+|---|---|---|
+|存储结构|LSM 树|列式存储|
+|写入方式|追加写 + 多层合并|批量写入列文件|
+|主要场景|实时流写 + Upsert|高性能 OLAP 查询|
+|是否典型 LSM|✅ 是|❌ 不是|
