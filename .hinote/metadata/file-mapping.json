@@ -25,7 +25,8 @@
     "20_工作/技术笔记/数据治理/小文件实践案例.md": "20_工作_技术笔记_数据治理_小文件实践案例.md.json",
     "20_工作/技术笔记/数据治理/partition 数量”就是控制 Spark 在某个阶段会启动多少个 task 来并行处理.md": "20_工作_技术笔记_数据治理_partition_数量”就是控制_spark_在某个阶段会启动多少个_task_来并行处理.md.json",
     "conflict-files-obsidian-git.md": "conflict-files-obsidian-git.md.json",
-    "20_工作/技术笔记/spark/spark.md": "20_工作_技术笔记_spark_spark.md.json"
+    "20_工作/技术笔记/spark/spark.md": "20_工作_技术笔记_spark_spark.md.json",
+    "20_工作/技术笔记/paimon.md": "20_工作_技术笔记_paimon.md.json"
   },
-  "lastUpdated": 1776911952987
+  "lastUpdated": 1776928129819
 }
