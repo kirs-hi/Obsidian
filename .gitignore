@@ -4,3 +4,6 @@
 .obsidian/workspace-*.json
 .obsidian/cache/
 .trash/
+
+# hi-note plugin metadata (avoid merge conflicts)
+.hinote/metadata/
