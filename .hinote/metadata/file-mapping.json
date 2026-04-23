@@ -1,7 +1,8 @@
 {
   "version": "2.0",
   "mapping": {
-    "20_工作/技术笔记/flink/flink join.md": "20_工作_技术笔记_flink_flink_join.md.json"
+    "20_工作/技术笔记/flink/flink join.md": "20_工作_技术笔记_flink_flink_join.md.json",
+    "从零开始学 Flink：Flink SQL 四大 Join 解析 - 腾讯云开发者社区 - 腾讯云.md": "从零开始学_flink：flink_sql_四大_join_解析_-_腾讯云开发者社区_-_腾讯云.md.json"
   },
-  "lastUpdated": 1776944194817
+  "lastUpdated": 1776946307894
 }
