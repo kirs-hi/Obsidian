@@ -31,7 +31,10 @@
     "30_学习/公众号/Paimon在58交易数据的应用和实践.md": "30_学习_公众号_paimon在58交易数据的应用和实践.md.json",
     "30_学习/公众号/Paimon在58交易数据的应用和实践 1.md": "30_学习_公众号_paimon在58交易数据的应用和实践_1.md.json",
     "30_学习/公众号/Flink 中文社区  Flink X Paimon 在抖音集团生活服务的落地实践.md": "30_学习_公众号_flink_中文社区_flink_x_paimon_在抖音集团生活服务的落地实践.md.json",
-    "30_学习/公众号/鹰角基于 Flink + Paimon + Trino 构建湖仓一体化平台实践项目_大数据_Apache Flink_InfoQ写作社区.md": "30_学习_公众号_鹰角基于_flink_+_paimon_+_trino_构建湖仓一体化平台实践项目_大数据_apache_flink_infoq写作社区.md.json"
+    "30_学习/公众号/鹰角基于 Flink + Paimon + Trino 构建湖仓一体化平台实践项目_大数据_Apache Flink_InfoQ写作社区.md": "30_学习_公众号_鹰角基于_flink_+_paimon_+_trino_构建湖仓一体化平台实践项目_大数据_apache_flink_infoq写作社区.md.json",
+    "30_学习/公众号/淘宝闪购基于Flink&Paimon的Lakehouse生产实践：从实时数仓到湖仓一体化的演进之路_大数据_Apache Flink_InfoQ写作社区.md": "30_学习_公众号_淘宝闪购基于flink&paimon的lakehouse生产实践：从实时数仓到湖仓一体化的演进之路_大数据_apache_flink_infoq写作社区.md.json",
+    "30_学习/公众号/Apache Flink错误处理实战手册：2年生产环境调试经验总结_大数据_Apache Flink_InfoQ写作社区.md": "30_学习_公众号_apache_flink错误处理实战手册：2年生产环境调试经验总结_大数据_apache_flink_infoq写作社区.md.json",
+    "30_学习/公众号/抖音集团基于Flink的亿级RPS实时计算优化实践_大数据_Apache Flink_InfoQ写作社区.md": "30_学习_公众号_抖音集团基于flink的亿级rps实时计算优化实践_大数据_apache_flink_infoq写作社区.md.json"
   },
-  "lastUpdated": 1776937846748
+  "lastUpdated": 1776938057928
 }
