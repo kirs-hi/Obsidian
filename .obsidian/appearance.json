@@ -4,5 +4,7 @@
   "cssTheme": "Border",
   "enabledCssSnippets": [
     "iconize-hide-default"
-  ]
+  ],
+  "baseFontSizeAction": true,
+  "translucency": true
 }
