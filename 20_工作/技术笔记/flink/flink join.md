@@ -1,4 +1,3 @@
-> 本文由 [简悦 SimpRead](http://ksria.com/simpread/) 转码， 原文地址 [cloud.tencent.com](https://cloud.tencent.com/developer/article/2635265)
 
 > 深入解析 Flink 实时数仓中多流关联技术，涵盖 Regular Join、Interval Join、Temporal Join 和 Lookup Join 四大核心方法。
 
