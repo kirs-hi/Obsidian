@@ -6,5 +6,6 @@
     "iconize-hide-default"
   ],
   "baseFontSizeAction": true,
-  "translucency": true
+  "translucency": true,
+  "baseFontSize": 30
 }
