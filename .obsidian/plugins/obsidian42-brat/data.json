@@ -1,7 +1,5 @@
 {
-  "pluginList": [
-    "Kenshin/simpread-obsidian-plugin"
-  ],
+  "pluginList": [],
   "pluginSubListFrozenVersion": [],
   "themesList": [],
   "updateAtStartup": true,
