@@ -1,0 +1,49 @@
+{
+  "defaultModelKey": "deepseek-ai/DeepSeek-V3-0324|siliconflow",
+  "defaultEmbeddingModelKey": "BAAI/bge-m3|siliconflow",
+  "activeModels": [
+    {
+      "name": "deepseek-ai/DeepSeek-V3-0324",
+      "provider": "siliconflow",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "https://api.siliconflow.cn/v1",
+      "apiKey": ""
+    },
+    {
+      "name": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+      "provider": "siliconflow",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "https://api.siliconflow.cn/v1",
+      "apiKey": ""
+    },
+    {
+      "name": "Qwen/Qwen3-8B",
+      "provider": "siliconflow",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "https://api.siliconflow.cn/v1",
+      "apiKey": ""
+    }
+  ],
+  "activeEmbeddingModels": [
+    {
+      "name": "BAAI/bge-m3",
+      "provider": "siliconflow",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "https://api.siliconflow.cn/v1",
+      "apiKey": ""
+    }
+  ],
+  "temperature": 0.7,
+  "maxTokens": 4096,
+  "contextTurns": 15,
+  "stream": true,
+  "embeddingRequestsPerSecond": 10,
+  "indexVaultToVectorStore": "ON MODE SWITCH",
+  "qaExclusions": "Templates/, 50_资源库/附件/",
+  "enableEncryption": false,
+  "showSuggestedPrompts": true
+}
