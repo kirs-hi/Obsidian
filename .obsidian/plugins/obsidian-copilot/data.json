@@ -1,40 +1,138 @@
 {
-  "defaultModelKey": "deepseek-ai/DeepSeek-V3-0324|siliconflow",
-  "defaultEmbeddingModelKey": "BAAI/bge-m3|siliconflow",
+  "defaultModelKey": "glm-4-flash|3rd party (openai-format)",
+  "defaultEmbeddingModelKey": "openai/text-embedding-3-small|openrouterai",
   "activeModels": [
     {
-      "name": "deepseek-ai/DeepSeek-V3-0324",
-      "provider": "siliconflow",
+      "name": "copilot-plus-flash",
+      "provider": "copilot-plus",
       "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "https://api.siliconflow.cn/v1",
-      "apiKey": ""
+      "isBuiltIn": true,
+      "core": true,
+      "plusExclusive": true,
+      "projectEnabled": false,
+      "capabilities": [
+        "vision"
+      ]
     },
     {
-      "name": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
-      "provider": "siliconflow",
+      "name": "google/gemini-2.5-flash",
+      "provider": "openrouterai",
       "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "https://api.siliconflow.cn/v1",
-      "apiKey": ""
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
     },
     {
-      "name": "Qwen/Qwen3-8B",
-      "provider": "siliconflow",
+      "name": "gpt-5.4",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gpt-5-mini",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "glm-4-flash",
+      "provider": "3rd party (openai-format)",
       "enabled": true,
       "isBuiltIn": false,
-      "baseUrl": "https://api.siliconflow.cn/v1",
-      "apiKey": ""
+      "baseUrl": "https://open.bigmodel.cn/api/paas/v4",
+      "apiKey": "d784f8f3415d46a0b53aa1bcd63cc637.VF0Y82DLho01UOb9"
+    },
+    {
+      "name": "glm-z1-flash",
+      "provider": "3rd party (openai-format)",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "https://open.bigmodel.cn/api/paas/v4",
+      "apiKey": "d784f8f3415d46a0b53aa1bcd63cc637.VF0Y82DLho01UOb9"
     }
   ],
   "activeEmbeddingModels": [
     {
-      "name": "BAAI/bge-m3",
+      "name": "copilot-plus-small",
+      "provider": "copilot-plus",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "plusExclusive": true
+    },
+    {
+      "name": "copilot-plus-large",
+      "provider": "copilot-plus-jina",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "plusExclusive": true,
+      "believerExclusive": true,
+      "dimensions": 1024
+    },
+    {
+      "name": "copilot-plus-multilingual",
+      "provider": "copilot-plus-jina",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "plusExclusive": true,
+      "dimensions": 512
+    },
+    {
+      "name": "openai/text-embedding-3-small",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true
+    },
+    {
+      "name": "text-embedding-3-small",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true
+    },
+    {
+      "name": "gemini-embedding-001",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true
+    },
+    {
+      "name": "gemini-embedding-2-preview",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true
+    },
+    {
+      "name": "Qwen/Qwen3-Embedding-0.6B",
       "provider": "siliconflow",
       "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "https://api.siliconflow.cn/v1",
-      "apiKey": ""
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "baseUrl": "https://api.siliconflow.com/v1"
     }
   ],
   "temperature": 0.7,
@@ -43,7 +141,50 @@
   "stream": true,
   "embeddingRequestsPerSecond": 10,
   "indexVaultToVectorStore": "ON MODE SWITCH",
-  "qaExclusions": "Templates/, 50_资源库/附件/",
+  "qaExclusions": "Templates%2F,50_%E8%B5%84%E6%BA%90%E5%BA%93%2F%E9%99%84%E4%BB%B6%2F,copilot",
   "enableEncryption": false,
-  "showSuggestedPrompts": true
+  "showSuggestedPrompts": true,
+  "userId": "d11c2393-fe7e-47d0-99b9-d2b26081bce3",
+  "embeddingRequestsPerMin": 60,
+  "embeddingBatchSize": 16,
+  "lexicalSearchRamLimit": 100,
+  "autoAddActiveContentToContext": true,
+  "generateAIChatTitleOnSave": true,
+  "enableMiyo": false,
+  "miyoSearchAll": false,
+  "miyoServerUrl": "",
+  "selfHostSearchProvider": "firecrawl",
+  "passMarkdownImages": true,
+  "enableInlineCitations": true,
+  "enableCustomPromptTemplating": true,
+  "autonomousAgentMaxIterations": 4,
+  "autonomousAgentEnabledToolIds": [
+    "localSearch",
+    "readNote",
+    "webSearch",
+    "pomodoro",
+    "youtubeTranscription",
+    "writeFile",
+    "editFile",
+    "updateMemory"
+  ],
+  "memoryFolderName": "copilot/memory",
+  "enableRecentConversations": true,
+  "enableSavedMemory": true,
+  "maxRecentConversations": 30,
+  "autosaveChat": true,
+  "autoCompactThreshold": 128000,
+  "quickCommandIncludeNoteContext": true,
+  "autoAddSelectionToContext": true,
+  "autoAcceptEdits": false,
+  "defaultSendShortcut": "enter",
+  "defaultSaveFolder": "copilot/copilot-conversations",
+  "customPromptsFolder": "copilot/copilot-custom-prompts",
+  "chatHistorySortStrategy": "recent",
+  "projectListSortStrategy": "recent",
+  "userSystemPromptsFolder": "copilot/system-prompts",
+  "userSystemPrompt": "",
+  "embeddingModelKey": "openai/text-embedding-3-small|openrouterai",
+  "isPlusUser": false,
+  "defaultSystemPromptTitle": ""
 }
