@@ -78,16 +78,16 @@ Flink SQL 支持丰富的数据类型，理解类型系统可以避免大量「�
 
 ### 2.1 基础类型
 
-| 分类 | 类型 | 说明 |
-|------|------|------|
-| 布尔 | `BOOLEAN` | true/false |
-| 整数 | `TINYINT` / `SMALLINT` / `INT` / `BIGINT` | 1/2/4/8 字节整数 |
-| 浮点 | `FLOAT` / `DOUBLE` | 单/双精度浮点 |
-| 精确小数 | `DECIMAL(p, s)` | p=总位数, s=小数位数，金额计算必用 |
-| 字符串 | `CHAR(n)` / `VARCHAR(n)` / `STRING` | STRING 等价于 VARCHAR(2147483647) |
-| 二进制 | `BINARY(n)` / `VARBINARY(n)` / `BYTES` | 二进制数据 |
-| 日期时间 | `DATE` / `TIME(p)` / `TIMESTAMP(p)` / `TIMESTAMP_LTZ(p)` | LTZ 表示带时区 |
-| 间隔 | `INTERVAL YEAR TO MONTH` / `INTERVAL DAY TO SECOND` | 时间间隔 |
+| 分类   | 类型                                                       | 说明                             |
+| ---- | -------------------------------------------------------- | ------------------------------ |
+| 布尔   | `BOOLEAN`                                                | true/false                     |
+| 整数   | `TINYINT` / `SMALLINT` / `INT` / `BIGINT`                | 1/2/4/8 字节整数                   |
+| 浮点   | `FLOAT` / `DOUBLE`                                       | 单/双精度浮点                        |
+| 精确小数 | `DECIMAL(p, s)`                                          | p=总位数, s=小数位数，金额计算必用           |
+| 字符串  | `CHAR(n)` / `VARCHAR(n)` / `STRING`                      | STRING 等价于 VARCHAR(2147483647) |
+| 二进制  | `BINARY(n)` / `VARBINARY(n)` / `BYTES`                   | 二进制数据                          |
+| 日期时间 | `DATE` / `TIME(p)` / `TIMESTAMP(p)` / `TIMESTAMP_LTZ(p)` | LTZ 表示带时区                      |
+| 间隔   | `INTERVAL YEAR TO MONTH` / `INTERVAL DAY TO SECOND`      | 时间间隔                           |
 
 ### 2.2 复合类型
 
