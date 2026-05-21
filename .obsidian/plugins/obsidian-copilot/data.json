@@ -186,5 +186,5 @@
   "userSystemPrompt": "",
   "embeddingModelKey": "openai/text-embedding-3-small|openrouterai",
   "isPlusUser": false,
-  "defaultSystemPromptTitle": "Migrated Custom System Prompt 2"
+  "defaultSystemPromptTitle": ""
 }
