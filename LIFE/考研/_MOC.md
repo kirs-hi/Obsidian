@@ -35,7 +35,7 @@
 ## 政治笔记
 
 ```dataviewjs
-const pages = dv.pages('"35_考研/政治"').sort(p => p.file.mtime, 'desc')
+const pages = dv.pages('"LIFE/考研/政治"').sort(p => p.file.mtime, 'desc')
 if (pages.length === 0) {
   dv.paragraph("*暂无笔记，新建笔记后自动出现*")
 } else {
@@ -46,7 +46,7 @@ if (pages.length === 0) {
 ## 英语笔记
 
 ```dataviewjs
-const pages = dv.pages('"35_考研/英语"').sort(p => p.file.mtime, 'desc')
+const pages = dv.pages('"LIFE/考研/英语"').sort(p => p.file.mtime, 'desc')
 if (pages.length === 0) {
   dv.paragraph("*暂无笔记，新建笔记后自动出现*")
 } else {
@@ -57,7 +57,7 @@ if (pages.length === 0) {
 ## 数学笔记
 
 ```dataviewjs
-const pages = dv.pages('"35_考研/数学"').sort(p => p.file.mtime, 'desc')
+const pages = dv.pages('"LIFE/考研/数学"').sort(p => p.file.mtime, 'desc')
 if (pages.length === 0) {
   dv.paragraph("*暂无笔记，新建笔记后自动出现*")
 } else {
@@ -68,7 +68,7 @@ if (pages.length === 0) {
 ## 专业课笔记
 
 ```dataviewjs
-const pages = dv.pages('"35_考研/专业课"').sort(p => p.file.mtime, 'desc')
+const pages = dv.pages('"LIFE/考研/专业课"').sort(p => p.file.mtime, 'desc')
 if (pages.length === 0) {
   dv.paragraph("*暂无笔记，新建笔记后自动出现*")
 } else {
@@ -79,7 +79,7 @@ if (pages.length === 0) {
 ## 复习计划 & 阶段复盘
 
 ```dataviewjs
-const pages = dv.pages('"35_考研/复习计划"').sort(p => p.file.mtime, 'desc')
+const pages = dv.pages('"LIFE/考研/复习计划"').sort(p => p.file.mtime, 'desc')
 if (pages.length === 0) {
   dv.paragraph("*暂无笔记，新建笔记后自动出现*")
 } else {
