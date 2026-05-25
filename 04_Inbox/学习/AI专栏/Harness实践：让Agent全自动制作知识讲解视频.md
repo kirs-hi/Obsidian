@@ -31,13 +31,13 @@ tags:
 - **NotebookLM 的问题**：做不了动画演示效果，出来的都是静态图。
 - **Remotion 框架的问题**：反而限制了模型本身的发挥，有时候还不如直接让模型写 HTML/CSS/JS 来得自由。
 
-![[img_00.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_00.png]]
 
 ### 1.2 上期视频案例
 
 拿上期视频举例——完全由 AI 生成，输入是一篇 Anthropic 最新发布的文章（[Building Claude Code: Prompt Caching Is Everything](https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything)），输出是一个网页：
 
-![[img_01.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_01.png]]
 
 - 把原始文章拆成 **13 个章节、100 多个细粒度讲解步骤**
 - 每一步都有完整的视觉演示效果
@@ -45,7 +45,7 @@ tags:
 - 底部隐藏进度条（鼠标悬浮才出现），支持自由跳转任意章节/步骤
 - 画面无页眉、页码、品牌标识——录屏时观众看到的是干净画面，更像视频而非网页
 
-![[img_02.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_02.png]]
 
 ### 1.3 从文章到视频的四个关键流程
 
@@ -57,13 +57,13 @@ tags:
 
 每段话对应一个画面步骤，每几步组成一个章节，每章聚焦一个话题。整个开发任务会非常复杂，提前做好大纲是保持后续稳定性的关键。
 
-![[img_03.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_03.png]]
 
 **第三步：给每步做视觉演示**
 
 不是把文字糊上去就完事。TCP 三次握手要画时序图，DNS 查询要画节点链路，反垃圾审判要画评分仪表盘。得把抽象概念"演"出来。
 
-![[img_04.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_04.png]]
 
 **第四步：步骤和口播对齐**
 
@@ -79,7 +79,7 @@ tags:
 
 直接跟 Agent 说"帮我做个视频网页"可能跑偏：稿子和画面对不上、章节数和音频数不一致、后面章节风格跟前面不搭……
 
-![[img_05.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_05.png]]
 
 **模型有能力，但你需要一套系统来驾驭这个过程——划定边界、管理状态、设立检查点、在关键节点拦住错误。这就是 Harness 要负责的事。**
 
@@ -95,7 +95,7 @@ Skill 是 Agent 通用的扩展能力标准——一份"操作手册"，告诉 A
 
 ### Harness 六大核心部分
 
-![[img_07.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_07.png]]
 
 | 核心部分 | 它解决的问题 | 典型作用 |
 |---------|------------|---------|
@@ -146,7 +146,7 @@ Skill 是 Agent 通用的扩展能力标准——一份"操作手册"，告诉 A
 
 **设计：信息按阶段分层加载**——每份文档只在指定阶段读取：
 
-![[img_09.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_09.png]]
 
 | 文档 | 读取时机 | 内容 |
 |------|---------|------|
@@ -185,7 +185,7 @@ Skill 是 Agent 通用的扩展能力标准——一份"操作手册"，告诉 A
 
 关键设计——**多章节并行隔离机制**：
 
-![[img_11.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_11.png]]
 
 - **每章独立文件夹**：`src/chapters/01-intro/`、`src/chapters/02-core/`……物理分离
 - **每章独立 CSS 前缀**：`.intro-hero`、`.core-card`……不会抢同一个 class name
@@ -200,11 +200,11 @@ Skill 是 Agent 通用的扩展能力标准——一份"操作手册"，告诉 A
 
 Agent 本能反应是重做整章——但重做整章会把已经做对的部分也改掉。用户说"第 3 步节奏太快"，你重做整章，结果第 1 步和第 5 步原来很好的效果也变了。
 
-![[img_12.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_12.png]]
 
 **关键原则：反馈修复的最小切片**——先定位问题在哪一层，再只改最小切片：
 
-![[img_13.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_13.png]]
 
 | 问题层 | 最小切片 |
 |--------|---------|
@@ -254,7 +254,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 claude -v
 ```
 
-![[img_14.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_14.png]]
 
 ### 3.2 MiniMax Token Plan
 
@@ -269,7 +269,7 @@ claude -v
 
 订阅后生成 API Key，提前保存备用。
 
-![[img_16.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_16.png]]
 
 ### 3.3 CC Switch
 
@@ -277,15 +277,15 @@ claude -v
 
 - 下载地址：https://github.com/farion1231/cc-switch/releases/tag/v3.14.1
 
-![[img_17.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_17.png]]
 
 配置步骤：点 "+" → 选 MiniMax 供应商 → 粘贴 API Key：
 
-![[img_18.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_18.png]]
 
 模型名全部改为 `MiniMax-M2.7` → 保存：
 
-![[img_19.png]]
+![[04_Inbox/学习/AI专栏/assets/harness-video/img_19.png]]
 
 回到首页，点击 "启用"：
 
