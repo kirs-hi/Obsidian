@@ -57,6 +57,10 @@
     "desktop-mp0mqcsp-stpn": {
       "frequency": 0,
       "syncOnStart": false
+    },
+    "desktop-mpvf3htl-duuw": {
+      "frequency": 0,
+      "syncOnStart": false
     }
   },
   "deviceAutoSyncMigrated": true,

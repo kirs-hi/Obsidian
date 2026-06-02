@@ -12,5 +12,6 @@
   "strictLineBreaks": true,
   "showLineNumber": true,
   "readableLineLength": true,
-  "alwaysUpdateLinks": true
+  "alwaysUpdateLinks": true,
+  "promptDelete": false
 }
