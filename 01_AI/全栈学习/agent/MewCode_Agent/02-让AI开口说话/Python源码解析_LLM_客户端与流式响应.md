@@ -564,3 +564,144 @@ async with self._client.messages.stream(**kwargs) as stream:
 | 错误分类 | 4 种自定义异常，SDK 异常映射 + 异常链保留 |
 | 工具参数 | Pydantic BaseModel 同时做 schema 生成和参数校验 |
 | 资源管理 | async with 上下文管理器，自动关闭流 |
+
+---
+
+## catpaw 升级版：新增的设计
+
+catpaw 是 mewcode 的升级版，`client.py` 和 `conversation.py` 在原有基础上增加了几个值得关注的新设计。
+
+### 新增：OpenAICompatClient（第三个客户端）
+
+mewcode 只有两个客户端（Anthropic / OpenAI），catpaw 新增了 `OpenAICompatClient`：
+
+```plain
+class OpenAICompatClient(LLMClient):
+    """面向 OpenAI 兼容 provider 的客户端，使用 Chat Completions API。"""
+```
+
+区别在于使用的 API 端点不同：
+
+| 客户端 | 端点 | 适用场景 |
+|--------|------|----------|
+| `OpenAIClient` | `/responses`（新版） | 官方 OpenAI |
+| `OpenAICompatClient` | `/chat/completions`（经典） | vLLM、Ollama、Together、Azure 等兼容服务 |
+
+`OpenAICompatClient` 还需要做一个 tool schema 格式转换，因为内部统一用 Anthropic 风格（扁平结构），但 Chat Completions 要求嵌套在 `function` 键下：
+
+```plain
+@staticmethod
+def _convert_tools(tools):
+    # 内部格式：{"type": "function", "name": "...", "parameters": {...}}
+    # Chat Completions 要求：{"type": "function", "function": {"name": "...", "parameters": {...}}}
+    converted = []
+    for t in tools:
+        converted.append({
+            "type": "function",
+            "function": {
+                "name": t["name"],
+                "description": t.get("description", ""),
+                "parameters": t.get("parameters", t.get("input_schema", {})),
+            },
+        })
+    return converted
+```
+
+### 新增：Prompt Cache 优化
+
+catpaw 专门为 Anthropic 加入了 Prompt Caching 支持——在消息里打上 `cache_control` 标记，后续请求中相同前缀只需支付 **10% 的费用**：
+
+```plain
+_EPHEMERAL = {"type": "ephemeral"}
+
+def _mark_last_user_tail_for_cache(messages):
+    # 给最后一条 user 消息的最后一个 block 加 cache_control
+
+def _mark_last_tool_for_cache(tools):
+    # 给 tool schema 列表的最后一项加 cache_control
+```
+
+打标记的位置有三处：
+1. **System Prompt**（每次都相同，最适合缓存）
+2. **Tool Schema 尾部**（工具列表跨轮次稳定）
+3. **最后一条 user 消息尾部**（把尽可能多的历史缓存住）
+
+`StreamEnd` 事件也新增了 `cache_read` 和 `cache_creation` 字段，让上层可以追踪缓存命中情况：
+
+```plain
+yield StreamEnd(
+    stop_reason=final.stop_reason or "end_turn",
+    input_tokens=usage.input_tokens,
+    output_tokens=usage.output_tokens,
+    cache_read=getattr(usage, "cache_read_input_tokens", 0) or 0,       # 缓存命中 token
+    cache_creation=getattr(usage, "cache_creation_input_tokens", 0) or 0,  # 建缓存 token
+)
+```
+
+### 新增：Context Window 自动探测
+
+catpaw 新增了 `resolve_context_window` 函数和 `fetch_model_context_window` 方法，在启动时后台异步查询模型支持的最大 context window：
+
+```plain
+async def fetch_model_context_window(self) -> int | None:
+    try:
+        info = await self._client.models.retrieve(
+            self.model, timeout=ANTHROPIC_MODEL_FETCH_TIMEOUT  # 最多等 3 秒
+        )
+        window = getattr(info, "max_input_tokens", None)
+        if isinstance(window, int) and window > 0:
+            return window
+        return None
+    except Exception:
+        return None  # 查不到无所谓，降级到内置映射表
+```
+
+这是一个**三层降级**机制：
+
+```
+第1层：config.yaml 中显式配置 context_window  →  最优先
+第2层：启动时自动从 API 拉取 max_input_tokens  →  次优先
+第3层：内置模型名称映射表 / 默认值             →  最终兜底
+```
+
+### 新增：Token 锚点机制（conversation.py）
+
+mewcode 的 `ConversationManager` 只有简单的 `last_input_tokens` 字段，catpaw 升级为**锚点机制**，更精确地估算当前 token 用量：
+
+```plain
+@dataclass
+class ConversationManager:
+    baseline_tokens: int = 0   # 上次 API 报告的真实 token 数（锚点）
+    anchor_count: int = 0      # 打锚点时的消息数量
+
+def record_usage_anchor(self, input_tokens, output_tokens, cache_read, cache_creation):
+    # API 返回后，钉下一个真实锚点
+    self.baseline_tokens = input_tokens + cache_read + cache_creation + output_tokens
+    self.anchor_count = len(self.history)
+
+def current_tokens(self) -> int:
+    if self.baseline_tokens <= 0:
+        return estimate_tokens(self.history)   # 冷启动：全部估算
+    tail = self.history[self.anchor_count:]    # 锚点之后的新消息
+    return self.baseline_tokens + estimate_tokens(tail)  # 真实 + 估算尾部
+```
+
+**为什么这样做更好？** 对比两种方案：
+
+- **旧方案**：每次都对整个 history 做字符估算，精度差
+- **新方案**：锚点之前用 API 返回的真实数据，只对新增消息估算——像账单余额一样，只算新花的那部分
+
+### 新增：replace_history 压缩重置
+
+mewcode 没有这个方法，catpaw 新增了 `replace_history`，当 context window 快满时用压缩后的历史替换旧历史，同时清零所有状态：
+
+```plain
+def replace_history(self, new_messages: list[Message]) -> None:
+    self.history = new_messages
+    self.env_injected = False    # 重置注入标记，下次重新注入
+    self.ltm_injected = False
+    self.baseline_tokens = 0     # 旧锚点已无效，清零
+    self.anchor_count = 0
+```
+
+这个方法是 context window 管理系统（`auto_compact`）的入口，详见第08章上下文压缩的解析。
