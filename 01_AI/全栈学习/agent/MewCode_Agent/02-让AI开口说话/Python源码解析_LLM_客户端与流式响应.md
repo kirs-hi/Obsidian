@@ -4,9 +4,9 @@
 
 LLM 通信的代码集中在两个文件里：
 
-| 文件 | 行数 | 职责 |
-| --- | --- | --- |
-| `mewcode/client.py` | 301 | LLM 客户端抽象、Anthropic/OpenAI 实现、流式处理、错误分类 |
+| 文件                        | 行数  | 职责                                                |
+| ------------------------- | --- | ------------------------------------------------- |
+| `mewcode/client.py`       | 301 | LLM 客户端抽象、Anthropic/OpenAI 实现、流式处理、错误分类           |
 | `mewcode/conversation.py` | 189 | Message dataclass、ConversationManager 对话管理、双协议序列化 |
 
 两个文件加起来不到 500 行，但覆盖了 LLM 通信的全部核心逻辑。Python 的表达密度很高：dataclass 自动生成构造函数和比较方法，async generator 天然就是流式事件的载体，Union 类型让事件族的定义简洁到一行。
