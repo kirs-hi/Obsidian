@@ -8,7 +8,7 @@ description:
 tags:
   - "clippings"
 ---
-理论篇讲了 Function Calling 的协议、工具接口设计、六个核心工具，以及流式 tool\_use 的集成。这一篇走读工具系统的代码，看「注册、描述、执行」这条主线怎么落地，以及流式 tool\_use 怎么拼进客户端。
+理论篇讲了 Function Calling 的协议、工具接口设计、六个核心工具，以及流式 tool_use 的集成。这一篇走读工具系统的代码，看「注册、描述、执行」这条主线怎么落地，以及流式 tool_use 怎么拼进客户端。
 
 模块概览
 
@@ -20,11 +20,11 @@ mewcode/tools/
 
 | 文件 | 行数 | 职责 |
 | --- | --- | --- |
-| base.py | 97 | 核心基础设施：Tool 抽象基类、ToolResult、ToolCategory、流事件类型、SKIP\_DIRS 常量 |
-| \_\_init\_\_.py | 159 | ToolRegistry 注册中心、带评分的延迟搜索、  create\_default\_registry  工厂 |
-| read\_file.py | 58 | ReadFile，offset/limit 分页加缓存 |
-| write\_file.py | 48 | WriteFile，自动创建父目录 |
-| edit\_file.py | 67 | EditFile，唯一性校验加缓存失效 |
+| base.py | 97 | 核心基础设施：Tool 抽象基类、ToolResult、ToolCategory、流事件类型、SKIP_DIRS 常量 |
+| __init__.py | 159 | ToolRegistry 注册中心、带评分的延迟搜索、create_default_registry  工厂 |
+| read_file.py | 58 | ReadFile，offset/limit 分页加缓存 |
+| write_file.py | 48 | WriteFile，自动创建父目录 |
+| edit_file.py | 67 | EditFile，唯一性校验加缓存失效 |
 | bash.py | 56 | Bash，asyncio 子进程加超时 |
 | glob.py | 45 | Glob，模式匹配 |
 | grep.py | 62 | Grep，正则搜索 |
@@ -36,7 +36,7 @@ mewcode/tools/
 
 ToolCategory
 
-ToolCategory = Literal\["read", "write", "command"\]
+ToolCategory = Literal["read", "write", "command"]
 
 用
 
@@ -64,19 +64,19 @@ class ToolResult:
 
 output: str
 
-is\_error: bool = False
+is_error: bool = False
 
 只有两个字段。用 dataclass 而不是 Pydantic 的 BaseModel 是有意的：ToolResult 是内部数据结构，不需要序列化和校验的开销。
 
-is\_error
+is_error
 
 不是程序异常，而是告诉模型「这次没成功」。模型收到
 
-is\_error=True
+is_error=True
 
 会重新判断再试。比如 EditFile 找不到要替换的字符串，返回
 
-is\_error=True
+is_error=True
 
 ，模型就知道该先 ReadFile 确认内容再改。工具执行失败对模型来说是有价值的反馈，只有真正的系统级错误才该作为程序异常上报。
 
@@ -90,25 +90,25 @@ category
 
 经
 
-is\_read\_only
+is_read_only
 
 给权限系统判断要不要拦截，
 
-is\_concurrency\_safe
+is_concurrency_safe
 
 给执行引擎决定能不能并发，
 
-should\_defer
+should_defer
 
 给注册中心判断要不要默认隐藏这个工具（第七章 MCP 再展开）。元信息集中在基类上声明，不同子系统各取所需，这是后面权限、调度自动运转的基础。
 
 最关键的设计在
 
-params\_model
+params_model
 
 。挂一个 Pydantic 模型上去，Schema 就能自动生成：
 
-model\_json\_schema()
+model_json_schema()
 
 把模型字段直接转成标准 JSON Schema，
 
@@ -140,7 +140,7 @@ invalidate
 
 都用
 
-with self.\_lock
+with self._lock
 
 保护，保证多个执行上下文同时读写这个字典时不会互相踩。写工具会被调度串行执行（见后文「第三步：执行」），只读操作又是快速的同步读写，真正的争用很少，这把锁更多是为以后文件 IO 改成异步或多线程时留的保险。
 
@@ -158,17 +158,17 @@ invalidate
 
 启动入口是
 
-create\_default\_registry
+create_default_registry
 
 ，注册六个内置工具：
 
 两个细节。第一，所有 import 写在函数体内，是延迟导入，避免工具模块反过来引用 registry 造成循环依赖。第二，
 
-file\_cache
+file_cache
 
 和
 
-file\_history
+file_history
 
 通过依赖注入只传给需要的工具，Bash、Glob、Grep 不碰文件缓存就不传。
 
@@ -180,7 +180,7 @@ disable
 
 ，靠
 
-\_disabled
+_disabled
 
 集合屏蔽：
 
@@ -188,13 +188,13 @@ disable
 
 每轮迭代由
 
-get\_all\_schemas
+get_all_schemas
 
 提供工具描述：
 
 这里是两层过滤加一层协议适配：先跳过被禁用的工具，再跳过尚未被发现的延迟工具，最后按 protocol 把同一份 Schema 适配成 Anthropic 的
 
-input\_schema
+input_schema
 
 形态或 OpenAI 的
 
@@ -216,13 +216,13 @@ await execute
 
 校验失败不抛异常中断循环，而是包装成
 
-is\_error=True
+is_error=True
 
 的 ToolResult 还给模型，让它调整参数重试。该拒绝的早拒绝，且失败要变成反馈而不是崩溃。
 
 模型一次可能返回多个工具调用，执行引擎按
 
-is\_concurrency\_safe
+is_concurrency_safe
 
 分批。只读的 ReadFile、Glob、Grep 标了
 
@@ -244,9 +244,9 @@ False
 | --- | --- | --- | --- |
 | ReadFile | read | 按行号范围读文件，输出带行号 | FileCache 缓存加分页 |
 | WriteFile | write | 创建父目录加写入整个文件 | 写后缓存失效 |
-| EditFile | write | 唯一性校验加精确替换 | old\_string 必须恰好出现一次 |
+| EditFile | write | 唯一性校验加精确替换 | old_string 必须恰好出现一次 |
 | Bash | command | asyncio 子进程执行命令 | 超时杀进程加编码容错 |
-| Glob | read | 遍历加模式匹配 | 跳过 SKIP\_DIRS |
+| Glob | read | 遍历加模式匹配 | 跳过 SKIP_DIRS |
 | Grep | read | 正则搜索文件内容 | 支持 include 过滤 |
 
 深入 EditFile：唯一性校验加缓存失效
@@ -255,7 +255,7 @@ EditFile 最能体现工具的设计哲学。先做存在性校验和读取，�
 
 str.count()
 
-做全文计数：0 次报找不到，多于 1 次报不唯一。这个约束解决的是「模型给了一个太短、文件里出现多次的字符串，你不知道它想改哪个」的问题。报错信息会引导模型给出更长、更有区分度的 old\_string。校验通过后替换并失效缓存：
+做全文计数：0 次报找不到，多于 1 次报不唯一。这个约束解决的是「模型给了一个太短、文件里出现多次的字符串，你不知道它想改哪个」的问题。报错信息会引导模型给出更长、更有区分度的 old_string。校验通过后替换并失效缓存：
 
 replace
 
@@ -275,11 +275,11 @@ Bash 是唯一用到 asyncio 底层能力的工具：
 
 默认超时 120 秒、上限 600 秒。
 
-create\_subprocess\_shell
+create_subprocess_shell
 
 启动子进程，
 
-wait\_for
+wait_for
 
 包住
 
@@ -323,7 +323,7 @@ Glob 用
 
 base.glob(pattern)
 
-匹配，过滤掉非文件和 SKIP\_DIRS 里的目录，结果按路径排序后每行一个相对路径返回：
+匹配，过滤掉非文件和 SKIP_DIRS 里的目录，结果按路径排序后每行一个相对路径返回：
 
 Grep 先编译正则，再逐文件逐行匹配，输出
 
@@ -345,7 +345,7 @@ base.py
 
 里的
 
-SKIP\_DIRS
+SKIP_DIRS
 
 常量（
 
@@ -357,11 +357,11 @@ SKIP\_DIRS
 
 、
 
-node\_modules
+node_modules
 
 、
 
-\_\_pycache\_\_
+__pycache__
 
 、
 
@@ -369,11 +369,11 @@ node\_modules
 
 、
 
-.mypy\_cache
+.mypy_cache
 
 ），遍历时跳过这些目录，既是性能优化也避免扫描无意义的文件。
 
-流式 tool\_use：把 JSON 碎片拼起来
+流式 tool_use：把 JSON 碎片拼起来
 
 工具参数在流式响应里是一段段 JSON 碎片到的，要拼起来再解析，这是这部分最需要小心的地方。
 
@@ -381,27 +381,27 @@ AnthropicClient.stream
 
 里的事件序列是：
 
-content\_block\_start
+content_block_start
 
 开头给 id 和 name，一串
 
-content\_block\_delta
+content_block_delta
 
 给 JSON 碎片，
 
-content\_block\_stop
+content_block_stop
 
 收尾。
 
 处理逻辑就是一个字符串缓冲区加三个分支：
 
-收到 tool\_use 的 start 就记下 id、name、清空缓冲；每个
+收到 tool_use 的 start 就记下 id、name、清空缓冲；每个
 
-input\_json\_delta
+input_json_delta
 
 把
 
-partial\_json
+partial_json
 
 追加进缓冲；stop 时一次性
 
@@ -425,9 +425,9 @@ ToolCallDelta
 
 ToolCallComplete
 
-三种流事件（定义在 base.py），上层 Agent 消费这些事件，不用关心底层协议。OpenAI 兼容协议的分片不带 content\_block 结构，而是按
+三种流事件（定义在 base.py），上层 Agent 消费这些事件，不用关心底层协议。OpenAI 兼容协议的分片不带 content_block 结构，而是按
 
-tool\_calls
+tool_calls
 
 的 index 累积 arguments 字符串（在
 
@@ -439,7 +439,7 @@ json.loads
 
 ，思路一致。
 
-消息管道：tool\_use 与 tool\_result 的配对
+消息管道：tool_use 与 tool_result 的配对
 
 工具调用让对话不再是简单的 user 和 assistant 交替。
 
@@ -449,41 +449,41 @@ ConversationManager.serialize
 
 三个要点都在这段里。第一，
 
-tool\_result
+tool_result
 
-以 user 角色发送，user 和 assistant 交替的惯例依然成立，只是 user 消息的内容变成了 tool\_result。第二，一条 assistant 消息的 content 是个列表，文本块和 tool\_use 块放在一起，不拆成两条。第三，配对靠 id：tool\_use 带
+以 user 角色发送，user 和 assistant 交替的惯例依然成立，只是 user 消息的内容变成了 tool_result。第二，一条 assistant 消息的 content 是个列表，文本块和 tool_use 块放在一起，不拆成两条。第三，配对靠 id：tool_use 带
 
 id
 
-，tool\_result 带
+，tool_result 带
 
-tool\_use\_id
+tool_use_id
 
 ，模型据此知道哪个结果对应哪次调用。工具返回的
 
-is\_error
+is_error
 
-也透过 tool\_result 一路带到 API，模型才能区分成功和失败。
+也透过 tool_result 一路带到 API，模型才能区分成功和失败。
 
 ToolSearch 与延迟加载
 
 ToolRegistry 里还有一套延迟加载机制。工具类声明
 
-should\_defer = True
+should_defer = True
 
 ，注册中心就默认不把它暴露给模型；配套的
 
-search\_deferred
+search_deferred
 
 用一套打分规则（名字命中加 10 分、描述命中加 5 分等）做检索，
 
-find\_deferred\_by\_names
+find_deferred_by_names
 
 按名字精确拉取。
 
 六个内置工具都没有设
 
-should\_defer
+should_defer
 
 ，这套机制在本章不会触发。它真正发挥作用是第七章引入 MCP 之后：MCP 工具数量不可控，全塞进上下文既费 token 又干扰模型选择，到那时再详细走读这套评分搜索。
 
@@ -492,16 +492,16 @@ should\_defer
 | 设计决策 | 实现方式 |
 | --- | --- |
 | 工具抽象 | ABC 抽象基类，类属性加一个 async 抽象方法 |
-| 参数校验 | Pydantic 模型，  model\_json\_schema()  自动生成 Schema，  model\_validate  校验失败转 is\_error |
-| 工具分类 | Literal\["read", "write", "command"\]  ，静态类型检查 |
-| 结果传递 | ToolResult  dataclass，  is\_error  让模型自行处理失败 |
+| 参数校验 | Pydantic 模型，model_json_schema()  自动生成 Schema，model_validate  校验失败转 is_error |
+| 工具分类 | Literal["read", "write", "command"]，静态类型检查 |
+| 结果传递 | ToolResult  dataclass，is_error  让模型自行处理失败 |
 | 注册机制 | ToolRegistry  用字典存储，运行时 disable/enable 屏蔽 |
-| 并发控制 | is\_concurrency\_safe  标记，由调度分批，只读并行、写串行 |
+| 并发控制 | is_concurrency_safe  标记，由调度分批，只读并行、写串行 |
 | 文件缓存 | FileCache  字典加锁，关键在写后 invalidate |
-| 异步执行 | 所有  execute  都是 async，Bash 用  asyncio.create\_subprocess\_shell |
-| 流式 tool\_use | 缓冲区累积  input\_json\_delta  ，  content\_block\_stop  时  json.loads  ，失败降级为空参数 |
-| 协议适配 | get\_all\_schemas(protocol)  与  serialize(protocol)  抹平 Anthropic 与 OpenAI 的格式差异 |
+| 异步执行 | 所有  execute  都是 async，Bash 用  asyncio.create_subprocess_shell |
+| 流式 tool_use | 缓冲区累积  input_json_delta，content_block_stop  时  json.loads，失败降级为空参数 |
+| 协议适配 | get_all_schemas(protocol)  与  serialize(protocol)  抹平 Anthropic 与 OpenAI 的格式差异 |
 
-读这一章的源码，最该带走的是：元信息（category、is\_concurrency\_safe 这些）怎么被权限和调度消费，这是后面几章自动化的基础；以及 Schema 生成和协议适配怎么把工具定义和具体 API 格式解耦。
+读这一章的源码，最该带走的是：元信息（category、is_concurrency_safe 这些）怎么被权限和调度消费，这是后面几章自动化的基础；以及 Schema 生成和协议适配怎么把工具定义和具体 API 格式解耦。
 
 若有收获，就点个赞吧

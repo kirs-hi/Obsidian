@@ -26,7 +26,7 @@ Agent 类
 
 class Agent:
 
-def \_\_init\_\_(
+def __init__(
 
 self,
 
@@ -36,19 +36,19 @@ registry: ToolRegistry,
 
 protocol: str,
 
-work\_dir: str = ".",
+work_dir: str = ".",
 
-max\_iterations: int = 50,
+max_iterations: int = 50,
 
-permission\_checker: PermissionChecker | None = None,
+permission_checker: PermissionChecker | None = None,
 
-context\_window: int = 200\_000,
+context_window: int = 200_000,
 
-instructions\_content: str = "",
+instructions_content: str = "",
 
-memory\_manager: MemoryManager | None = None,
+memory_manager: MemoryManager | None = None,
 
-hook\_engine: HookEngine | None = None,
+hook_engine: HookEngine | None = None,
 
 ) -> None:
 
@@ -66,21 +66,21 @@ protocol
 
 。Python 版的构造函数直接把所有可选能力都用关键字参数传进来了，一次性配好。Python 天然适合这种风格：关键字参数自带命名和默认值，调用方只需要指定想改的参数，其余的全用默认值。
 
-max\_iterations
+max_iterations
 
 默认 50，选择了比较保守的默认值，防止 Agent 失控运行。
 
 额外多出来的几个字段值得注意：
 
-compact\_breaker
+compact_breaker
 
 是上下文压缩的熔断器，防止压缩反复失败时陷入死循环；
 
-\_loop\_count
+_loop_count
 
 追踪循环完成次数，用于触发定期记忆提取；
 
-active\_skills
+active_skills
 
 管理当前激活的技能提示词。
 
@@ -106,13 +106,13 @@ text: str
 
 class ToolResultEvent:
 
-tool\_id: str
+tool_id: str
 
-tool\_name: str
+tool_name: str
 
 output: str
 
-is\_error: bool
+is_error: bool
 
 elapsed: float
 
@@ -148,7 +148,7 @@ await future
 
 阻塞等待。UI 那边调
 
-future.set\_result()
+future.set_result()
 
 写入用户选择。Future 只能 set 一次，语义上非常精确，因为一个权限请求就该只有一次回应。这比用更通用的并发原语更安全，不会出现多次写入导致的竞态问题。
 
@@ -160,7 +160,7 @@ consume()
 
 是一个 async generator：它接收 LLM 的流式事件（
 
-AsyncIterator\[StreamEvent\]
+AsyncIterator[StreamEvent]
 
 ），内部做汇总（累积文本、收集工具调用），同时把转换后的
 
@@ -174,7 +174,7 @@ async for
 
 这个设计把「读 LLM 流 + 汇总 + 转发」封装成了一个可复用的 generator，主循环只需要
 
-async for event in collector.consume(llm\_stream): yield event
+async for event in collector.consume(llm_stream): yield event
 
 一行。流的读取逻辑和主循环的控制流彻底解耦，各自独立演进。
 
@@ -194,11 +194,11 @@ async for event in agent.run(conv)
 
 run()
 
-先做两件准备工作：把环境上下文和长期记忆注入对话，然后触发 session\_ start Hook。这些准备逻辑内聚在 Agent 自己，不散落在上层调用者里。
+先做两件准备工作：把环境上下文和长期记忆注入对话，然后触发 session_start Hook。这些准备逻辑内聚在 Agent 自己，不散落在上层调用者里。
 
 循环骨架
 
-步骤不少，因为 Python 版在每个关键节点都穿插了 Hook 调用。turn\_ start/turn\_ end/pre\_ send/post\_ receive 四个事件点覆盖了 Agent Loop 的完整生命周期，让 Hook 开发者可以在任何阶段介入。
+步骤不少，因为 Python 版在每个关键节点都穿插了 Hook 调用。turn_start/turn_end/pre_send/post_receive 四个事件点覆盖了 Agent Loop 的完整生命周期，让 Hook 开发者可以在任何阶段介入。
 
 调用 LLM 和消费流式响应
 
@@ -228,11 +228,11 @@ Python 版的设计选择是在流消费完毕后再统一执行工具，而不�
 
 没有工具调用就结束循环。Python 版还有一个记忆提取的定时触发：每完成
 
-MEMORY\_EXTRACTION\_INTERVAL
+MEMORY_EXTRACTION_INTERVAL
 
 （5）次循环，就异步启动一次记忆提取。
 
-asyncio.ensure\_future
+asyncio.ensure_future
 
 是 Python 的 fire-and-forget 方式，启动一个后台 coroutine 但不等它完成，不阻塞主循环的退出。
 
@@ -240,7 +240,7 @@ asyncio.ensure\_future
 
 先把工具调用作为 assistant 消息写入对话历史，然后把工具调用分批。分批逻辑由
 
-partition\_tool\_calls
+partition_tool_calls
 
 函数负责，下面工具执行部分详细讲。
 
@@ -252,7 +252,7 @@ partition\_tool\_calls
 
 就是上面那个
 
-if not response.tool\_calls
+if not response.tool_calls
 
 判断。这是最常见的正常退出路径。Generator 走到
 
@@ -290,7 +290,7 @@ run()
 
 工具执行
 
-分批策略：partition\_ tool\_ calls
+分批策略：partition_tool_calls
 
 Python 版在执行工具之前有一个分批步骤：
 
@@ -298,19 +298,19 @@ Python 版在执行工具之前有一个分批步骤：
 
 比如 LLM 返回了
 
-\[Read, Read, Write, Read\]
+[Read, Read, Write, Read]
 
 ，会被切成三个 batch：
 
-\[Read, Read\]
+[Read, Read]
 
 （并发执行）、
 
-\[Write\]
+[Write]
 
 （串行执行）、
 
-\[Read\]
+[Read]
 
 （串行执行）。这保证了写操作不会和其他操作并行，避免竞态条件。分批策略在性能和安全之间取了一个平衡点：读操作尽可能并行提速，写操作严格串行保安全。
 
@@ -330,17 +330,17 @@ asyncio.gather
 
 注意并发 batch 和串行 batch 走不同的代码路径。并发路径调
 
-\_execute\_single\_tool\_direct
+_execute_single_tool_direct
 
 （直接执行，不做权限检查），串行路径调
 
-\_execute\_tool
+_execute_tool
 
 （完整的四关流程，包含权限检查和 Hook）。这是因为并发执行的读操作通常是安全的，不需要逐个询问权限。
 
-单工具执行流程：\_ execute\_ tool
+单工具执行流程：_execute_tool
 
-\_execute\_tool
+_execute_tool
 
 是一个 async generator，走完整的四关：
 
@@ -348,7 +348,7 @@ asyncio.gather
 
 找不到就标记
 
-is\_unknown
+is_unknown
 
 ，为连续未知工具检查提供依据。
 
@@ -356,7 +356,7 @@ is\_unknown
 
 这里的精妙之处在于
 
-\_execute\_tool
+_execute_tool
 
 是 async generator。当需要请求权限时，它 yield 一个
 
@@ -368,7 +368,7 @@ await future
 
 阻塞自己。主循环收到这个 yield 后再 yield 给 UI，UI 拿到 future 后让用户选择，选完
 
-future.set\_result()
+future.set_result()
 
 写回结果。Generator 恢复执行，继续后面的逻辑。
 
@@ -378,17 +378,17 @@ future.set\_result()
 
 Hook 检查在主循环里，在调
 
-\_execute\_tool
+_execute_tool
 
 之前完成：
 
 Python 版把 Hook 拦截放在了
 
-\_execute\_tool
+_execute_tool
 
 的外面，而不是里面。这样
 
-\_execute\_tool
+_execute_tool
 
 只关心权限 + 执行，Hook 逻辑由主循环管理。
 
@@ -396,9 +396,9 @@ Python 版把 Hook 拦截放在了
 
 Python 版在执行前做了一步显式参数校验：
 
-model\_validate
+model_validate
 
-用 Pydantic 校验 LLM 传来的参数是否符合工具定义的 schema。显式校验比隐式的 JSON 反序列化更严格，能给出更友好的错误信息，比如「参数 file\_ path 缺失」而不是笼统的反序列化失败。
+用 Pydantic 校验 LLM 传来的参数是否符合工具定义的 schema。显式校验比隐式的 JSON 反序列化更严格，能给出更友好的错误信息，比如「参数 file_path 缺失」而不是笼统的反序列化失败。
 
 StreamingExecutor
 
@@ -408,11 +408,11 @@ submit
 
 接收一个 coroutine，用
 
-asyncio.create\_task
+asyncio.create_task
 
 把它调度到事件循环里立刻开始执行。
 
-collect\_results
+collect_results
 
 用
 
@@ -420,13 +420,13 @@ asyncio.gather
 
 等所有 task 完成，
 
-return\_exceptions=True
+return_exceptions=True
 
 让失败的 task 不会中断其他 task。结果按提交顺序返回。
 
 Python 版用 asyncio 的 task + gather 来实现并行调度，代码很简洁。理解这段代码的关键是 asyncio 的调度模型：
 
-create\_task
+create_task
 
 把 coroutine 注册到事件循环里立刻开始执行，
 
@@ -438,11 +438,11 @@ gather
 
 截断策略分三级处理。特别大的输出（超过
 
-SINGLE\_RESULT\_CHAR\_LIMIT
+SINGLE_RESULT_CHAR_LIMIT
 
 ）会被持久化到磁盘文件，对话里只保留预览和文件路径。中等大小的输出（超过
 
-MAX\_OUTPUT\_CHARS
+MAX_OUTPUT_CHARS
 
 ）直接截断。小输出原样保留。三级策略让上下文管理非常精细：超大输出不丢失（存磁盘可以用 ReadFile 读回来），中等输出减负，小输出无损。
 
@@ -450,11 +450,11 @@ Plan Mode
 
 核心思路是不改变循环结构，只在每轮迭代开头注入一段 system-reminder。
 
-plan\_mode
+plan_mode
 
 是一个 property，直接读
 
-permission\_mode
+permission_mode
 
 的状态：
 
@@ -464,14 +464,14 @@ permission\_mode
 
 | 设计决策 | Python 的实现方式 |
 | --- | --- |
-| 异步事件流 | async generator，  yield  推送事件，调用方  async for  消费 |
+| 异步事件流 | async generator，yield  推送事件，调用方  async for  消费 |
 | 主循环 | while True  +  break  出口 |
-| 工具并行 | partition\_tool\_calls  分批 +  asyncio.gather  并发执行读操作 |
-| 权限交互 | asyncio.Future  ，generator yield 出  PermissionRequest  ，  await future  等待回应 |
+| 工具并行 | partition_tool_calls  分批 +  asyncio.gather  并发执行读操作 |
+| 权限交互 | asyncio.Future，generator yield 出  PermissionRequest，await future  等待回应 |
 | 流消费 | StreamCollector  async generator，读 LLM 流同时 yield AgentEvent |
 | Plan Mode | 注入 system-reminder + 权限层拦截 |
 | 上下文保护 | 三级策略：磁盘持久化 / 截断 / 原样保留 |
-| 记忆提取 | asyncio.ensure\_future  fire-and-forget，每 5 次循环触发 |
-| 参数校验 | Pydantic  model\_validate  ，显式校验每个字段 |
+| 记忆提取 | asyncio.ensure_future  fire-and-forget，每 5 次循环触发 |
+| 参数校验 | Pydantic  model_validate，显式校验每个字段 |
 
 若有收获，就点个赞吧

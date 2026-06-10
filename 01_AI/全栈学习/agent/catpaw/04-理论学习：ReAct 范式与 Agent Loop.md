@@ -22,11 +22,11 @@ tags:
 
 这是 5、6 步操作。但现在的 MewCode 只能做一步。模型返回一个
 
-tool\_use
+tool_use
 
 ，你执行完返回
 
-tool\_result
+tool_result
 
 ，模型给一个最终回复，结束。它不会自动往下走。
 
@@ -64,7 +64,7 @@ ReAct（Reasoning + Acting）
 
 ](https://arxiv.org/abs/2210.03629)
 
-的论文，把这个过程形式化了。 它的核心思想特别简单：让 LLM 交替进行「推理」和「行动」。
+的论文，把这个过程形式化了。它的核心思想特别简单：让 LLM 交替进行「推理」和「行动」。
 
 在 ReAct 出现之前，大家用 LLM 做事要么是纯推理，也就是 Chain-of-Thought，让模型一步步想但光想不做；要么是纯行动，直接让模型调工具但不让它解释为什么要调。ReAct 说：你让它一边想一边做不就行了？
 
@@ -80,11 +80,11 @@ text
 
 内容，Act 就是
 
-tool\_use
+tool_use
 
 ，Observe 就是
 
-tool\_result
+tool_result
 
 。我们不需要发明任何新格式，API 本身就是为 ReAct 设计的。
 
@@ -137,15 +137,15 @@ MewCode 需要四种停止条件，缺一不可。
 
 Claude API 返回的
 
-stop\_reason
+stop_reason
 
 如果是
 
-end\_turn
+end_turn
 
 ，并且响应里没有任何
 
-tool\_use
+tool_use
 
 ，就表示模型认为任务已经完成。这是最理想的停止方式，模型自然地收尾。
 
@@ -164,7 +164,7 @@ tool\_use
 | Go | context.Context | select { case <-ctx.Done(): return } |
 | Python | asyncio.CancelledError | task.cancel()  \+ try/except |
 | TypeScript | AbortController | signal.addEventListener('abort',...) |
-| Rust | tokio CancellationToken | tokio::select! { \_ = token.cancelled() =>... } |
+| Rust | tokio CancellationToken | tokio::select! { _= token.cancelled() =>... } |
 
 关键原则是一样的：每一轮循环开始前检查取消信号，如果被取消了就干净退出，释放所有资源。
 
@@ -188,29 +188,29 @@ Agent Loop 产生的事件类型有这些：
 
 | 事件类型 | 含义 | 携带的数据 |
 | --- | --- | --- |
-| stream\_ text | 模型正在输出的文字增量 | 一小段文本 |
-| tool\_ use | 模型请求调用工具 | 工具名、工具输入、请求 ID |
-| tool\_ result | 工具执行完成 | 执行结果、是否出错、耗时 |
-| turn\_ complete | 一轮 LLM 调用完成 | 当前轮次序号 |
-| loop\_ complete | 整个循环结束 | 总轮次 |
+| stream_text | 模型正在输出的文字增量 | 一小段文本 |
+| tool_use | 模型请求调用工具 | 工具名、工具输入、请求 ID |
+| tool_result | 工具执行完成 | 执行结果、是否出错、耗时 |
+| turn_complete | 一轮 LLM 调用完成 | 当前轮次序号 |
+| loop_complete | 整个循环结束 | 总轮次 |
 | usage | Token 用量更新 | 累计输入/输出 token 数 |
 | error | 发生错误 | 错误信息 |
 
 UI 层只需要从事件流里消费事件，根据事件类型更新界面就行了。收到
 
-stream\_text
+stream_text
 
 ？把文字追加到输出区域。收到
 
-tool\_use
+tool_use
 
 ？显示一个「正在执行 ReadFile...」的提示。收到
 
-tool\_result
+tool_result
 
 ？把工具结果折叠展示。收到
 
-loop\_complete
+loop_complete
 
 ？整个交互结束。
 
@@ -249,11 +249,11 @@ Agent Loop 的每一轮其实可以用一个非常简单的状态机来理解。
 
 有必要。因为把「是否继续」的判断逻辑集中到一个地方，后续扩展会非常自然。随着 MewCode 的功能越来越复杂，你可能需要加入更多状态。比如
 
-NEED\_CONFIRM
+NEED_CONFIRM
 
 ，遇到破坏性操作时需要用户确认才能继续。或者
 
-RATE\_LIMITED
+RATE_LIMITED
 
 ，被 API 限流时需要暂停一会儿再重试。如果一开始就用状态机的思维来写，加新状态就是加一个分支的事。如果判断逻辑散落在循环的各个角落，加新状态就变成了到处打补丁。
 
@@ -277,19 +277,19 @@ partitionToolCalls
 
 举个例子。模型返回
 
-\[Read, Read, Edit, Read, Read\]
+[Read, Read, Edit, Read, Read]
 
 ，会被分成三批：
 
-\[Read, Read\]
+[Read, Read]
 
 并发 →
 
-\[Edit\]
+[Edit]
 
 串行 →
 
-\[Read, Read\]
+[Read, Read]
 
 并发。每一批串行批只包含一个不安全的调用，并发批可以包含多个安全调用。
 
@@ -313,7 +313,7 @@ Agent Loop 每轮都需要把 System Prompt 传给 Claude。这里先配一个�
 
 System Prompt 包含角色设定、环境信息和模式指令：
 
-环境信息很容易被忽略，但它非常重要。如果模型不知道当前工作目录在哪里，它执行命令的时候就不知道该用绝对路径还是相对路径。如果不知道操作系统是什么，它可能在 Linux 上给你写 Windows 的命令。 这些信息对人类来说是不言自明的，但模型需要你明确告诉它。工作目录和 OS 在一次会话内不会变，放在 system 里正好可以利用 Prompt Cache。
+环境信息很容易被忽略，但它非常重要。如果模型不知道当前工作目录在哪里，它执行命令的时候就不知道该用绝对路径还是相对路径。如果不知道操作系统是什么，它可能在 Linux 上给你写 Windows 的命令。这些信息对人类来说是不言自明的，但模型需要你明确告诉它。工作目录和 OS 在一次会话内不会变，放在 system 里正好可以利用 Prompt Cache。
 
 ![](https://cdn.nlark.com/yuque/0/2026/jpeg/27235736/1780574358337-bc7ed894-b3b9-4c70-bfbf-bac9b3fd363c.jpeg)
 
@@ -369,7 +369,7 @@ Plan Mode 下的权限矩阵和 Default 模式
 
 说白了就是一个 while 循环加上几次 API 调用。但这个简单的循环能做出令人惊讶的事情，因为循环里的那个「大脑」真的很强。你给它足够的工具和足够的自由度，它就能像一个初级程序员一样工作。自己读代码、自己写代码、自己跑测试、自己根据报错修改，直到任务完成。
 
-当然，它还不完美。它会犯错、会走弯路、有时候会陷入循环。但它已经能真正帮你干活了。 下一章我们先给它写好驾驶手册，定义它该怎么做事、什么不能做。
+当然，它还不完美。它会犯错、会走弯路、有时候会陷入循环。但它已经能真正帮你干活了。下一章我们先给它写好驾驶手册，定义它该怎么做事、什么不能做。
 
 本章小结
 
@@ -377,11 +377,11 @@ Plan Mode 下的权限矩阵和 Default 模式
 
 ReAct 范式说白了就是「想一步做一步」，Agent Loop 说白了就是「一个 while 循环不停调 API 直到模型不再需要工具」。代码不复杂，但它把一堆独立的工具串成了一个能自主工作的系统。
 
-几个关键设计值得记住。消息拼接要保证 assistant 的 text 和 tool\_use 不能拆开，
+几个关键设计值得记住。消息拼接要保证 assistant 的 text 和 tool_use 不能拆开，
 
-tool\_result
+tool_result
 
-以 user 角色发送且 id 一一对应。四种停止条件缺一不可，尤其是迭代上限这个安全网。AgentEvent 事件流让 Agent 和 UI 完全解耦，这个模式在后续章节会反复出现。 Plan Mode 通过 prompt 约束引导模型只做探索，权限系统作为兜底确保写操作仍需用户确认。
+以 user 角色发送且 id 一一对应。四种停止条件缺一不可，尤其是迭代上限这个安全网。AgentEvent 事件流让 Agent 和 UI 完全解耦，这个模式在后续章节会反复出现。Plan Mode 通过 prompt 约束引导模型只做探索，权限系统作为兜底确保写操作仍需用户确认。
 
 从这一章开始，MewCode 不再需要你一步步手动催它了。
 

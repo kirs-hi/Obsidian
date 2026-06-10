@@ -30,7 +30,7 @@ tags:
 
 ![](https://cdn.nlark.com/yuque/0/2026/jpeg/27235736/1780574048916-56bf6afb-c959-4948-9bd2-920bcbbc4360.jpeg)
 
-这一章内容很多，因为工具系统是整个 Agent 架构的核心基础设施。我们不仅要理解 Function Calling 协议，还要设计一套可扩展的工具框架，实现 6 个核心工具，并且把流式 tool\_ use 解析集成到 LLM 客户端中。
+这一章内容很多，因为工具系统是整个 Agent 架构的核心基础设施。我们不仅要理解 Function Calling 协议，还要设计一套可扩展的工具框架，实现 6 个核心工具，并且把流式 tool_use 解析集成到 LLM 客户端中。
 
 Function Calling：模型怎么「动手」
 
@@ -56,7 +56,7 @@ tools
 
 注意两个细节。第一，模型可以在同一条回复里既输出文本又请求调用工具，甚至同时请求调用多个工具。第二，每个
 
-tool\_use
+tool_use
 
 都有一个唯一的
 
@@ -66,7 +66,7 @@ id
 
 还有一点非常重要：模型输出了
 
-tool\_use
+tool_use
 
 并不意味着工具已经被执行了。它只是一个「建议」，或者说一个「请求」。实际执行与否，由你的代码决定。
 
@@ -74,15 +74,15 @@ tool\_use
 
 你的代码拿到
 
-tool\_use
+tool_use
 
 请求后，在本地执行对应的操作（比如读文件），然后把结果作为
 
-tool\_result
+tool_result
 
 发回给模型：
 
-tool\_use\_id
+tool_use_id
 
 必须和上面的
 
@@ -92,7 +92,7 @@ id
 
 注意
 
-tool\_result
+tool_result
 
 是以
 
@@ -104,7 +104,7 @@ user
 
 模型收到工具结果后，有两种可能。一是它觉得信息够了，直接给出最终回复。二是它觉得还需要更多信息，再请求调用另一个工具。比如它先搜索找到相关文件，再读取内容，再修改代码。
 
-这种「调工具 → 看结果 → 再调工具」的链条，就是下一章 Agent Loop 的雏形。这一章我们先实现单步工具调用， 让整个流程跑通 。
+这种「调工具 → 看结果 → 再调工具」的链条，就是下一章 Agent Loop 的雏形。这一章我们先实现单步工具调用，让整个流程跑通。
 
 Function Calling 的本质
 
@@ -157,7 +157,7 @@ Define tools - Claude API Docs
 
 ![](https://cdn.nlark.com/yuque/0/2026/jpeg/27235736/1780574048997-be6bd0b5-9dcc-4d93-a924-1765c429b906.jpeg)
 
-所以写工具的时候，不要觉得代码逻辑最重要。花在描述上的时间，比花在代码上的时间更值得。后面 第 5 章讲 System Prompt 时会更深入地讨论描述的写法技巧，现在先照着上面的原则写，后面学完再回来打磨。
+所以写工具的时候，不要觉得代码逻辑最重要。花在描述上的时间，比花在代码上的时间更值得。后面第 5 章讲 System Prompt 时会更深入地讨论描述的写法技巧，现在先照着上面的原则写，后面学完再回来打磨。
 
 工具接口设计：为什么不能只有名字和执行
 
@@ -280,7 +280,7 @@ ls > /tmp/file
 | Go | interface + baseTool struct | 组合（嵌入 struct） | json.RawMessage |
 | Python | Protocol / ABC + dataclass | 继承或 mixin | dict / Pydantic model |
 | TypeScript | interface + 工厂函数 | 闭包或 class | 纯 JSON 对象 |
-| Rust | trait + 默认实现 | 泛型或宏 | serde\_ json::Value |
+| Rust | trait + 默认实现 | 泛型或宏 | serde_json::Value |
 
 选择你的语言最惯用的方式就行。
 
@@ -350,7 +350,7 @@ ReadFile：最简单，但有暗坑
 
 isError: true
 
-结果， 提示信息要告诉模型为什么失败以及怎么调整。
+结果，提示信息要告诉模型为什么失败以及怎么调整。
 
 元信息：只读，非破坏性，分类为 file。
 
@@ -380,19 +380,19 @@ EditFile：最复杂，也最省 token
 
 想象一下，一个 500 行的文件，模型只需要改第 42 行的一个变量名。如果用 WriteFile，模型得输出完整的 500 行内容，其中 499 行跟原来一模一样，白白浪费几千个 token。
 
-EditFile 让模型只描述「改哪里」：给出要替换的原文本（old\_ string）和替换后的文本（new\_ string）。
+EditFile 让模型只描述「改哪里」：给出要替换的原文本（old_string）和替换后的文本（new_string）。
 
-执行逻辑看起来简单：在文件里找到 old\_ string，替换成 new\_ string，写回文件。但有一个关键约束：
+执行逻辑看起来简单：在文件里找到 old_string，替换成 new_string，写回文件。但有一个关键约束：
 
-old\_string 必须在文件中唯一匹配
+old_string 必须在文件中唯一匹配
 
 。
 
-为什么要这个约束？因为如果 old\_ string 出现了多次（比如模型给了一个太短的字符串
+为什么要这个约束？因为如果 old_string 出现了多次（比如模型给了一个太短的字符串
 
 return
 
-），你不知道模型想改哪一个。猜错了就是 bug。所以找到多次时直接报错，提示「该字符串出现了 N 次，请提供更多上下文使其唯一」。模型收到这个反馈后，会给出更长、更有区分度的 old\_ string。
+），你不知道模型想改哪一个。猜错了就是 bug。所以找到多次时直接报错，提示「该字符串出现了 N 次，请提供更多上下文使其唯一」。模型收到这个反馈后，会给出更长、更有区分度的 old_string。
 
 未找到时也报错，提示模型可能记错了文件内容。长对话中这很常见，模型记忆的文件内容可能已经过时。
 
@@ -400,7 +400,7 @@ return
 
 替换成功后，返回修改位置附近几行的内容（带行号），让模型能确认修改是否正确。
 
-new\_ string 为空字符串表示删除该段文本。
+new_string 为空字符串表示删除该段文本。
 
 元信息：非只读，非破坏性，分类为 file。
 
@@ -428,7 +428,7 @@ sleep 999
 
 和
 
-<exit\_code>
+<exit_code>
 
 。
 
@@ -438,11 +438,11 @@ sleep 999
 
 非零退出码不是 error
 
-。编译报错退出码为 1 这类命令执行失败是正常的反馈信息，模型需要看到报错内容才能修复问题 。只有超时才作为
+。编译报错退出码为 1 这类命令执行失败是正常的反馈信息，模型需要看到报错内容才能修复问题。只有超时才作为
 
 isError: true
 
-返回 。
+返回。
 
 元信息：非只读，
 
@@ -470,7 +470,7 @@ Glob：Agent 的眼睛（找文件）
 
 、
 
-node\_modules
+node_modules
 
 、
 
@@ -482,7 +482,7 @@ vendor
 
 、
 
-\_\_pycache\_\_
+__pycache__
 
 等目录，这些目录文件多、没意义、搜进去只会浪费 token。
 
@@ -533,7 +533,7 @@ Glob 和 Grep 是「眼睛」工具。模型用它们在项目中找到需要的
 
 ![](https://cdn.nlark.com/yuque/0/2026/jpeg/27235736/1780574050546-f1c58950-4575-4acf-ba87-9e7b5ca23b99.jpeg)
 
-集成到 LLM 客户端：处理流式 tool\_ use
+集成到 LLM 客户端：处理流式 tool_use
 
 工具框架写好了，接下来要把 Function Calling 集成到 LLM 客户端中。这涉及请求侧和响应侧两部分改动。
 
@@ -549,11 +549,11 @@ text
 
 类型。现在要支持
 
-tool\_use
+tool_use
 
 和
 
-tool\_result
+tool_result
 
 。
 
@@ -561,54 +561,54 @@ tool\_result
 
 | 内容类型 | 新增字段 | 说明 |
 | --- | --- | --- |
-| tool\_ use | id | 工具调用的唯一标识 |
-|  | name | 工具名称 |
-|  | input | 调用参数（JSON） |
-| tool\_ result | tool\_ use\_ id | 对应的 tool\_ use id |
-|  | content | 执行结果文本 |
-|  | is\_ error | 是否为错误结果 |
+| tool_use | id | 工具调用的唯一标识 |
+|    | name | 工具名称 |
+|    | input | 调用参数（JSON） |
+| tool_result | tool_use_id | 对应的 tool_use id |
+|    | content | 执行结果文本 |
+|    | is_error | 是否为错误结果 |
 
 流式事件也要扩展，新增一种「工具调用」事件类型，携带 id、name、input 三个字段。
 
-流式 tool\_ use 解析：拼 JSON 碎片
+流式 tool_use 解析：拼 JSON 碎片
 
 这是本章技术上最 tricky 的部分。
 
-在流式响应中，文本内容是一段一段到的，你直接追加就行。但 tool\_ use 的输入参数也是一段一段到的，而且是 JSON 碎片。你要把碎片拼起来，最后解析成完整的 JSON。
+在流式响应中，文本内容是一段一段到的，你直接追加就行。但 tool_use 的输入参数也是一段一段到的，而且是 JSON 碎片。你要把碎片拼起来，最后解析成完整的 JSON。
 
 流式事件的顺序是这样的：
 
-content\_block\_start
+content_block_start
 
-告诉你一个新的 tool\_ use 块开始了，给你 id 和 name。然后一系列
+告诉你一个新的 tool_use 块开始了，给你 id 和 name。然后一系列
 
-content\_block\_delta
+content_block_delta
 
 给你 JSON 的碎片。最后
 
-content\_block\_stop
+content_block_stop
 
 告诉你这个块结束了。
 
 你的处理逻辑就三步：收到
 
-content\_block\_start
+content_block_start
 
 且 type 为
 
-tool\_use
+tool_use
 
 时，记下 id 和 name，初始化一个字符串缓冲区。后续每个
 
-input\_json\_delta
+input_json_delta
 
 到达，把
 
-partial\_json
+partial_json
 
 追加到缓冲区。最后
 
-content\_block\_stop
+content_block_stop
 
 时，把缓冲区里的完整 JSON 解析出来，发送一个 ToolUse 事件。
 
@@ -622,9 +622,9 @@ content\_block\_stop
 
 user: "帮我读一下项目入口文件"
 
-assistant: \[text: "好的，让我读取这个文件"\] \[tool\_use: ReadFile({path: "/project/main.py"})\]
+assistant: [text: "好的，让我读取这个文件"] [tool_use: ReadFile({path: "/project/main.py"})]
 
-user: \[tool\_result: "1\\tdef main():\\n2\\t print('hello')\\n..."\]
+user: [tool_result: "1\\tdef main():\\n2\\t print('hello')\\n..."]
 
 assistant: "这个文件包含了程序的入口..."
 
@@ -632,15 +632,15 @@ assistant: "这个文件包含了程序的入口..."
 
 第一，
 
-tool\_result
+tool_result
 
-是以 user 角色发送的，这是 Claude API 的要求。 上一章留下的那个问题，工具结果到底算谁的消息，到这里就有了答案：它归在 user 名下。所以 user/assistant 交替的格式不用打破，只是这条 user 消息装的是 tool\_result，而不是普通文本。
+是以 user 角色发送的，这是 Claude API 的要求。上一章留下的那个问题，工具结果到底算谁的消息，到这里就有了答案：它归在 user 名下。所以 user/assistant 交替的格式不用打破，只是这条 user 消息装的是 tool_result，而不是普通文本。
 
-第二，一条 assistant 消息可能同时包含 text 和 tool\_ use 两种内容块，它们必须放在同一条消息里，不能拆成两条。
+第二，一条 assistant 消息可能同时包含 text 和 tool_use 两种内容块，它们必须放在同一条消息里，不能拆成两条。
 
-第三，如果模型在一次回复中请求了多个工具调用（比如同时 ReadFile 和 Grep），所有 tool\_ use 块在同一条 assistant 消息里，所有 tool\_ result 在同一条 user 消息里，通过 id 配对。
+第三，如果模型在一次回复中请求了多个工具调用（比如同时 ReadFile 和 Grep），所有 tool_use 块在同一条 assistant 消息里，所有 tool_result 在同一条 user 消息里，通过 id 配对。
 
-上一章写的格式转换方法需要更新来处理这种消息模式。特别是 tool\_ use 和 tool\_ result 的 id 配对不能出错。
+上一章写的格式转换方法需要更新来处理这种消息模式。特别是 tool_use 和 tool_result 的 id 配对不能出错。
 
 ![](https://cdn.nlark.com/yuque/0/2026/jpeg/27235736/1780574050875-41658f42-1af3-411d-b6f1-aa690b462ca4.jpeg)
 
