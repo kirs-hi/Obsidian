@@ -1,11 +1,11 @@
 {
   "accentColor": "",
   "theme": "moonstone",
-  "cssTheme": "Border",
+  "cssTheme": "Minimal",
   "enabledCssSnippets": [
     "iconize-hide-default"
   ],
   "baseFontSizeAction": true,
   "translucency": true,
-  "baseFontSize": 20
+  "baseFontSize": 16
 }
